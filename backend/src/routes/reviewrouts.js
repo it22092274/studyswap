@@ -5,26 +5,27 @@ const Review = require('../models/Review');
 const User = require('../models/User');
 
 // POST a new review
-router.post('/', async (req, res) => {
-  const { reviewer, reviewee, rating, comment, marketplaceReview } = req.body;
+router.post('/add', async (req, res) => {
+  const { marketplaceReview, rating, comment } = req.body;
 
   try {
     const review = new Review({
-      reviewer,
-      reviewee,
+      marketplaceReview,
       rating,
       comment,
-      marketplaceReview
+      
     });
     
-    await review.save();
+    await review.save().then(()=>{
+      res.status(200).json({msg:"review added successfully"});
+    });
     
     // Add review to user's profile
-    const user = await User.findById(reviewee);
-    user.reviews.push(review._id);
-    await user.save();
+    // const user = await User.findById(reviewee);
+    // user.reviews.push(review._id);
+    // await user.save();
+
     
-    res.status(201).json(review);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
