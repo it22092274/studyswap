@@ -1,66 +1,55 @@
-// routes/reviews.js
-const express = require('express');
-const router = express.Router();
-const Review = require('../models/review');
+// routes/Reviews.js
+const Express = require('express');
+const Router = Express.Router();
+const Review = require('../models/Review');
+const User = require('../models/User'); // Ensure User model is imported
 
 // POST a new review
-router.post('/add', async (req, res) => {
-  const { marketplaceReview, rating, comment } = req.body;
+Router.post('/', async (req, res) => {
+  const { Reviewer, Reviewee, Rating, Comment, MarketplaceReview } = req.body;
 
   try {
-    const review = new Review({
-      marketplaceReview,
-      rating,
-      comment,
-      
+    const newReview = new Review({
+      Reviewer,
+      Reviewee,
+      Rating,
+      Comment,
+      MarketplaceReview
     });
-    
-    await review.save().then(()=>{
-      res.status(200).json({msg:"review added successfully"});
-    });
-    
-    // Add review to user's profile
-    // const user = await User.findById(reviewee);
-    // user.reviews.push(review._id);
-    // await user.save();
 
-    
+    await newReview.save();
+
+    // Add review to provider's profile if role is 'Provider'
+    const user = await User.findById(Reviewee);
+    if (user.Role === 'Provider') {
+      user.Reviews.push(newReview._id);
+      await user.save();
+    }
+
+    res.status(201).json(newReview);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 });
 
-// // GET reviews for a user
-// router.get('/:userId', async (req, res) => {
-//   try {
-//     const reviews = await Review.find({ reviewee: req.params.userId }).populate('reviewer');
-//     res.status(200).json(reviews);
-//   } catch (error) {
-//     res.status(400).json({ error: error.message });
-//   }
-// });
-
-// // GET marketplace reviews
-// router.get('/marketplace', async (req, res) => {
-//   try {
-//     const reviews = await Review.find({ marketplaceReview: true }).populate('reviewer');
-//     res.status(200).json(reviews);
-//   } catch (error) {
-//     res.status(400).json({ error: error.message });
-//   }
-// });
-
-//Get all reviews 
-router.route("/reviews/").get((req, res) => {
-  Review.find()
-    .then((result) => {
-      res.status(200).json({ result });
-    })
-    .catch((err) => {
-      res
-        .status(400)
-        .json({ message: `Feedbacks fetching unsuccessful ${err}` });
-    });
+// GET reviews for a user
+Router.get('/:UserId', async (req, res) => {
+  try {
+    const userReviews = await Review.find({ Reviewee: req.params.UserId }).populate('Reviewer');
+    res.status(200).json(userReviews);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 });
 
-module.exports = router;
+// GET marketplace reviews
+Router.get('/marketplace', async (req, res) => {
+  try {
+    const marketplaceReviews = await Review.find({ MarketplaceReview: true }).populate('Reviewer');
+    res.status(200).json(marketplaceReviews);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+module.exports = Router;
