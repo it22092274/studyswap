@@ -43,7 +43,7 @@ Router.get('/:UserId', async (req, res) => {
 });
 
 // GET marketplace reviews
-Router.get('/marketplace', async (req, res) => {
+Router.get('/marketplacerev', async (req, res) => {
   try {
     const marketplaceReviews = await Review.find({ MarketplaceReview: true }).populate('Reviewer');
     res.status(200).json(marketplaceReviews);
