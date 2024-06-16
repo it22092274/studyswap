@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const authRoutes = require('./routes/authRoutes');
+const authRoutes = require('./src/routes/reviewrouts');
 const dbConfig = require('./config/db');
 
 // Load environment variables

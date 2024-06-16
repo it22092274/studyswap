@@ -1,7 +1,7 @@
 
 // models/Review.js
 const Mongoose = require('mongoose');
-const User = require('./User'); // Import the User model
+const User = require('./usermodel'); // Import the User model
 
 const ReviewSchema = new Mongoose.Schema({
   Reviewer: { type: Mongoose.Schema.Types.ObjectId, ref: 'User' },

@@ -1,11 +1,11 @@
 // routes/Reviews.js
 const Express = require('express');
 const Router = Express.Router();
-const Review = require('../models/Review');
-const User = require('../models/User'); // Ensure User model is imported
+const Review = require('../models/reviewmodel');
+const User = require('../models/usermodel'); // Ensure User model is imported
 
 // POST a new review
-Router.post('/', async (req, res) => {
+Router.post('/addrev', async (req, res) => {
   const { Reviewer, Reviewee, Rating, Comment, MarketplaceReview } = req.body;
 
   try {
@@ -20,11 +20,11 @@ Router.post('/', async (req, res) => {
     await newReview.save();
 
     // Add review to provider's profile if role is 'Provider'
-    const user = await User.findById(Reviewee);
-    if (user.Role === 'Provider') {
-      user.Reviews.push(newReview._id);
-      await user.save();
-    }
+    // const user = await User.findById(Reviewee);
+    // if (user.Role === 'Provider') {
+    //   user.Reviews.push(newReview._id);
+    //   await user.save();
+    // }
 
     res.status(201).json(newReview);
   } catch (error) {
