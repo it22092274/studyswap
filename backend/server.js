@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const jwt = require('jsonwebtoken');
 const authRoutes = require('./src/routes/reviewrouts');
 const dbConfig = require('./config/db');
 
